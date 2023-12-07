@@ -1,5 +1,5 @@
-package com.vp.list.viewmodel;
+package com.vp.list.viewmodel
 
-public enum ListState {
+enum class ListState {
     IN_PROGRESS, LOADED, ERROR
 }

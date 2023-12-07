@@ -1,7 +1,7 @@
-package com.vp.list;
+package com.vp.list
 
-import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 
 @GlideModule
-public class AppGlideModule extends com.bumptech.glide.module.AppGlideModule {
-}
+class AppGlideModule : AppGlideModule()

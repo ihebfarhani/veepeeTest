@@ -45,3 +45,30 @@
 
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+-keep class **_Impl { *; }
+-keep class **_Factory { *; }
+-keep class * extends androidx.room.RoomDatabase { *; }
+
+# Don't remove or rename enums' members for proper (de)serialization
+-keepclassmembers enum * { *; }
+
+
+#
+# Obfuscation Options
+#
+
+# Produce useful obfuscated stack traces
+-keep public class * extends java.lang.Exception # show custom exceptions' original name in crash stack traces
+-keepattributes LineNumberTable,SourceFile
+-printmapping build/proguard-mapping.txt
+-renamesourcefileattribute SourceFile
+
+# Obfuscate package names
+-repackageclasses
+
+#
+# Shrinking Options
+#
+
+-printusage build/proguard-removed.txt

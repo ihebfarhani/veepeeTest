@@ -1,74 +1,68 @@
-package com.vp.list;
+package com.vp.list
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-public class GridPagingScrollListener extends RecyclerView.OnScrollListener {
-    private static final int PAGE_SIZE = 10;
-    private final GridLayoutManager layoutManager;
-    private static final LoadMoreItemsListener EMPTY_LISTENER = (int page) -> {
-        //empty listener
-    };
-    private LoadMoreItemsListener loadMoreItemsListener = EMPTY_LISTENER;
-    private boolean isLastPage = false;
-    private boolean isLoading = false;
+class GridPagingScrollListener(private val layoutManager: GridLayoutManager) :
+    RecyclerView.OnScrollListener() {
+    private var loadMoreItemsListener: LoadMoreItemsListener = EMPTY_LISTENER
+    private var isLastPage = false
+    private var isLoading = false
 
-    GridPagingScrollListener(@NonNull final GridLayoutManager layoutManager) {
-        this.layoutManager = layoutManager;
-    }
-
-    @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        super.onScrolled(recyclerView, dx, dy)
 
         if (shouldLoadNextPage()) {
-            loadMoreItemsListener.loadMoreItems(getNextPageNumber());
+            loadMoreItemsListener.loadMoreItems(getNextPageNumber())
         }
     }
 
-    private boolean shouldLoadNextPage() {
-        return isNotLoadingInProgress() && userScrollsToNextPage() && isNotFirstPage() && hasNextPage();
+    private fun shouldLoadNextPage(): Boolean {
+        return isNotLoadingInProgress() && userScrollsToNextPage() && isNotFirstPage() && hasNextPage()
     }
 
-    private boolean userScrollsToNextPage() {
-        return (layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) >= layoutManager.getItemCount();
+    private fun userScrollsToNextPage(): Boolean {
+        return (layoutManager.childCount + layoutManager.findFirstVisibleItemPosition()) >= layoutManager.itemCount
     }
 
-    private boolean isNotFirstPage() {
-        return layoutManager.findFirstVisibleItemPosition() >= 0 && layoutManager.getItemCount() >= PAGE_SIZE;
+    private fun isNotFirstPage(): Boolean {
+        return layoutManager.findFirstVisibleItemPosition() >= 0 && layoutManager.itemCount >= PAGE_SIZE
     }
 
-    private boolean hasNextPage() {
-        return !isLastPage;
+    private fun hasNextPage(): Boolean {
+        return !isLastPage
     }
 
-    private boolean isNotLoadingInProgress() {
-        return !isLoading;
+    private fun isNotLoadingInProgress(): Boolean {
+        return !isLoading
     }
 
-    private int getNextPageNumber() {
-        return layoutManager.getItemCount() / PAGE_SIZE + 1;
+    private fun getNextPageNumber(): Int {
+        return layoutManager.itemCount / PAGE_SIZE + 1
     }
 
-    public void setLoadMoreItemsListener(@Nullable final LoadMoreItemsListener loadMoreItemsListener) {
-        if (loadMoreItemsListener != null) {
-            this.loadMoreItemsListener = loadMoreItemsListener;
-        } else {
-            this.loadMoreItemsListener = EMPTY_LISTENER;
+    fun setLoadMoreItemsListener(loadMoreItemsListener: LoadMoreItemsListener?) {
+        this.loadMoreItemsListener = loadMoreItemsListener ?: EMPTY_LISTENER
+    }
+
+    fun markLoading(isLoading: Boolean) {
+        this.isLoading = isLoading
+    }
+
+    fun markLastPage(isLastPage: Boolean) {
+        this.isLastPage = isLastPage
+    }
+
+    interface LoadMoreItemsListener {
+        fun loadMoreItems(page: Int)
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 10
+        private val EMPTY_LISTENER: LoadMoreItemsListener = object : LoadMoreItemsListener {
+            override fun loadMoreItems(page: Int) {
+
+            }
         }
-    }
-
-    public void markLoading(boolean isLoading) {
-        this.isLoading = isLoading;
-    }
-
-    public void markLastPage(boolean isLastPage) {
-        this.isLastPage = isLastPage;
-    }
-
-    public interface LoadMoreItemsListener {
-        void loadMoreItems(int page);
     }
 }

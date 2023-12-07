@@ -17,18 +17,20 @@ class NetworkModule {
     @Singleton
     @Provides
     fun providesRetrofit(okHttpClient: OkHttpClient) = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://www.omdbapi.com/")
-            .client(okHttpClient)
-            .build()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl("https://www.omdbapi.com/")
+        .client(okHttpClient)
+        .build()
 
     @Provides
-    fun providesOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor,
-                       @Named("apiKeyInterceptor") apiKeyInterceptor: Interceptor): OkHttpClient {
+    fun providesOkHttp(
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        @Named("apiKeyInterceptor") apiKeyInterceptor: Interceptor
+    ): OkHttpClient {
         return OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .addInterceptor(apiKeyInterceptor)
-                .build()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(apiKeyInterceptor)
+            .build()
     }
 
     @Provides
@@ -38,10 +40,10 @@ class NetworkModule {
         val originalHttpUrl = original.url
 
         val url = originalHttpUrl.newBuilder()
-                .addQueryParameter("apiKey", BuildConfig.API_KEY)
-                .build()
+            .addQueryParameter("apiKey", BuildConfig.API_KEY)
+            .build()
         val requestBuilder = original.newBuilder()
-                .url(url)
+            .url(url)
 
         val request = requestBuilder.build()
         it.proceed(request)
